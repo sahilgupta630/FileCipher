@@ -28,8 +28,13 @@ void ProcessManagement::executeTask() {
     if(!taskQueue.empty()){
         std::unique_ptr<Task> task = std::move(taskQueue.front());
         taskQueue.pop();
-        std::cout<<"Executing task: "<<task->toString()<<std::endl;
-        executeCryption(task->toString());
+        std::string taskStr = task->toString();
+        
+        // Execute the dedicated cryption binary using execl
+        if (execl("./cryption", "./cryption", taskStr.c_str(), (char*)NULL) == -1) {
+            std::cerr << "Failed to execute crypt binary for task" << std::endl;
+            exit(1);
+        }
     }
 
 }
